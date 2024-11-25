@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm
+FROM node:20-bookworm
 
 RUN npm install -g pnpm
 
