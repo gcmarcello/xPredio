@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import { tsr } from "@/shared/router/tsr";
 import { useState } from "react";
 
 export default function SignupPage() {
@@ -8,34 +9,15 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  const { mutate, data, error } = tsr.auth.signUp.useMutation({
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   const handleRegister = async () => {
-    setMessage("");
-
-    if (!email || !password) {
-      setMessage("Por favor, preencha todos os campos.");
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        setMessage("Usuário criado com sucesso!");
-        setEmail("");
-        setPassword("");
-      } else {
-        const errorData = await response.json();
-        setMessage(errorData.error || "Erro ao criar usuário.");
-      }
-    } catch (error) {
-      setMessage("Erro ao se conectar ao servidor.");
-    }
+    console.log("registering...");
+    mutate({ body: { email, password } });
   };
 
   return (
@@ -97,7 +79,7 @@ export default function SignupPage() {
           Registrar
         </button>
       </form>
-      {message && <p style={{ marginTop: "16px", color: "red" }}>{message}</p>}
+      {error && <p style={{ marginTop: "16px", color: "red" }}>{JSON.stringify(error)}</p>}
     </div>
   );
 }
