@@ -1,7 +1,5 @@
 import { initContract } from "@ts-rest/core";
 import { loginDto, recoverAccountDto, signUpDto } from "./auth.dto";
-import { createNextHandler } from "@ts-rest/serverless/next";
-import { AuthService } from "./auth.service";
 
 const c = initContract();
 
@@ -37,41 +35,5 @@ export const authContract = c.router(
   },
   {
     pathPrefix: "/auth",
-  }
-);
-
-export const authHandler = createNextHandler(
-  authContract,
-  {
-    login: async ({ body }) => {
-      const data = await AuthService.login(body);
-
-      return {
-        status: 200,
-        body: data,
-      };
-    },
-    signUp: async ({ body }) => {
-      const data = await AuthService.signUp(body);
-
-      return {
-        status: 200,
-        body: data,
-      };
-    },
-    recover: async ({ body }) => {
-      const data = await AuthService.recoverAccount(body);
-
-      return {
-        status: 200,
-        body: data,
-      };
-    },
-  },
-  {
-    basePath: "/api",
-    jsonQuery: true,
-    responseValidation: true,
-    handlerType: "app-router",
   }
 );
