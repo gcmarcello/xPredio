@@ -1,4 +1,4 @@
-import { handler } from "@/server/router/handler";
+import { authHandler as handler } from "@/server/resources/auth/auth.contract";
 
 export {
   handler as GET,
