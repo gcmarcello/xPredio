@@ -13,3 +13,9 @@ export const signUpDto = z.object({
 });
 
 export type SignUpDto = z.infer<typeof signUpDto>;
+
+export const recoverAccountDto = z.object({
+  email: z.string().email(),
+});
+
+export type RecoverAccountDto = z.infer<typeof recoverAccountDto>;

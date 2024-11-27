@@ -1,6 +1,6 @@
 import { initContract } from "@ts-rest/core";
-import { loginDto, signUpDto } from "./auth.dto";
-import { tsr } from "@ts-rest/serverless/next";
+import { loginDto, recoverAccountDto, signUpDto } from "./auth.dto";
+import { createNextHandler } from "@ts-rest/serverless/next";
 import { AuthService } from "./auth.service";
 
 const c = initContract();
@@ -12,9 +12,9 @@ export const authContract = c.router(
       path: "/login",
       responses: {
         200: c.type<string>(),
+        401: c.type<string>(),
       },
       body: loginDto,
-      summary: "Create a post",
     },
     signUp: {
       method: "POST",
@@ -24,7 +24,15 @@ export const authContract = c.router(
         409: c.type<string>(),
       },
       body: signUpDto,
-      summary: "Create a post",
+    },
+    recover: {
+      method: "POST",
+      path: "/recover",
+      responses: {
+        200: c.type<string>(),
+        404: c.type<string>(),
+      },
+      body: recoverAccountDto,
     },
   },
   {
@@ -32,22 +40,38 @@ export const authContract = c.router(
   }
 );
 
-export const authRouter = tsr.router(authContract, {
-  login: async ({ body }) => {
-    const data = await AuthService.login(body);
+export const authHandler = createNextHandler(
+  authContract,
+  {
+    login: async ({ body }) => {
+      const data = await AuthService.login(body);
 
-    return {
-      status: 200,
-      body: data,
-    };
+      return {
+        status: 200,
+        body: data,
+      };
+    },
+    signUp: async ({ body }) => {
+      const data = await AuthService.signUp(body);
+
+      return {
+        status: 200,
+        body: data,
+      };
+    },
+    recover: async ({ body }) => {
+      const data = await AuthService.recoverAccount(body);
+
+      return {
+        status: 200,
+        body: data,
+      };
+    },
   },
-
-  signUp: async ({ body }) => {
-    const data = await AuthService.signUp(body);
-
-    return {
-      status: 200,
-      body: data,
-    };
-  },
-});
+  {
+    basePath: "/api",
+    jsonQuery: true,
+    responseValidation: true,
+    handlerType: "app-router",
+  }
+);

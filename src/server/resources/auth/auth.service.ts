@@ -2,7 +2,7 @@ import prisma from "../../../../prisma/prisma";
 import * as bcrypt from "bcrypt";
 import { LoginDto, SignUpDto } from "./auth.dto";
 import { TsRestResponseError } from "@ts-rest/core";
-import { contract } from "@/server/router/contract";
+import { authContract } from "./auth.contract";
 
 export class AuthService {
   static async login(data: LoginDto) {
@@ -27,7 +27,7 @@ export class AuthService {
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (user) {
-      throw new TsRestResponseError(contract.auth.signUp, {
+      throw new TsRestResponseError(authContract.signUp, {
         body: "Email já cadastrado.",
         status: 409,
       });
@@ -41,6 +41,19 @@ export class AuthService {
         password: hashedPassword,
       },
     });
+
+    return "ok";
+  }
+
+  static async recoverAccount(data: { email: string }) {
+    const user = await prisma.user.findUnique({ where: { email: data.email } });
+
+    if (!user) {
+      throw new TsRestResponseError(authContract.recover, {
+        body: "Email não cadastrado.",
+        status: 404,
+      });
+    }
 
     return "ok";
   }
