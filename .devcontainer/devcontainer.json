@@ -49,6 +49,12 @@
             "base": "prisma",
             "color": "yellow-600",
             "fileNames": ["_main.prisma"]
+          },
+          {
+            "name": "resource-contract",
+            "base": "nest",
+            "color": "purple-600",
+            "fileExtensions": ["contract.ts"]
           }
         ],
         "material-icon-theme.folders.associations": {
