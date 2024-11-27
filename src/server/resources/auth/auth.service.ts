@@ -1,8 +1,8 @@
 import prisma from "../../../../prisma/prisma";
 import * as bcrypt from "bcrypt";
-import { LoginDto, SignUpDto } from "./auth.dto";
+import { LoginDto, SignUpDto } from "../../../shared/resources/auth/auth.dto";
 import { TsRestResponseError } from "@ts-rest/core";
-import { authContract } from "./auth.contract";
+import { authContract } from "../../../shared/resources/auth/auth.contract";
 
 export class AuthService {
   static async login(data: LoginDto) {
