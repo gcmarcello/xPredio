@@ -8,6 +8,6 @@ export const contract = c.router(
     auth: authContract,
   },
   {
-    pathPrefix: "api/",
+    pathPrefix: "/api/",
   }
 );
